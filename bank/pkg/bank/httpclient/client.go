@@ -13,8 +13,12 @@ type Service interface {
 	GetBalance(request *api.GetBalanceRequest) (response api.GetBalanceResponse, err error)
 }
 
+type fasthttpSS interface {
+	Do(req *fasthttp.Request, resp *fasthttp.Response) error
+}
+
 type client struct {
-	cli *fasthttp.HostClient
+	cli fasthttpSS
 
 	transportGetBalance GetBalanceTransport
 }
@@ -39,7 +43,7 @@ func (s *client) GetBalance(request *api.GetBalanceRequest) (response api.GetBal
 
 // NewClient the client creator
 func NewClient(
-	cli *fasthttp.HostClient,
+	cli fasthttpSS,
 	transportGetBalance GetBalanceTransport,
 ) Service {
 	return &client{
@@ -48,34 +52,3 @@ func NewClient(
 		transportGetBalance: transportGetBalance,
 	}
 }
-
-//// NewPreparedClient create and set up http client
-//func NewPreparedClient(
-//	serverURL string,
-//	serverHost string,
-//	maxConns int,
-//	errorProcessor errorProcessor,
-//	errorCreator errorCreator,
-//
-//	uriPathCreateThesis string,
-//
-//	httpMethodGetBrandsByID string,
-//
-//) Service {
-//
-//	transportCreateThesis := NewCreateThesisTransport(
-//		errorProcessor,
-//		errorCreator,
-//		serverURL+uriPathCreateThesis,
-//		httpMethodGetBrandsByID,
-//	)
-//
-//	return NewClient(
-//		&fasthttp.HostClient{
-//			Addr:     serverHost,
-//			MaxConns: maxConns,
-//		},
-//
-//		transportCreateThesis,
-//	)
-//}

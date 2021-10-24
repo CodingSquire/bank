@@ -54,6 +54,9 @@ func (s *loggingMiddleware) DeductFromBell(request api.DeductFromBellRequest) (r
 	return response, err
 }
 
+//каналы
+//мок тесты
+
 func (s *loggingMiddleware) CreateAcc(request api.CreateAccRequest) (response api.CreateAccResponse, err error) {
 	defer func(begin time.Time) {
 		s.wrap(err).
