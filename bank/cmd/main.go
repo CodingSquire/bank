@@ -15,11 +15,20 @@ type configuration struct {
 }
 
 func main() {
-	cfg := &configuration{}
+	cfg := &configuration{
+		Logger: logger.Config{
+			Level:     "debug",
+			Timestamp: true,
+			Caller:    true,
+			Pretty:    true,
+		},
+		Debug: true,
+	}
 
 	myBank := bank.NewBank()
 
 	l := logger.NewLogger(&cfg.Logger)
+
 	myBank = bank.NewLoggingMiddleware(myBank, l)
 	myBankRouter := httpserver.NewPreparedServer(myBank)
 
